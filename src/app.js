@@ -118,32 +118,14 @@ app.use(errorHandler)
 
 const port = process.env.PORT || 3001
 
-// app.use(express.json())
-// app.use('/users', router.userRouter)
-// app.use(express.static(__dirname + "/public"));
-
 async function start() {
     try {
-        //url подклчюения для теста
-        // const url = `mongodb+srv://LazarevKirill:opeCv6qi2S5l7GaD@cluster0-jgb4m.mongodb.net/shop`;
-
         await mongoose.connect(keys.MONGODB_URI, {
             useNewUrlParser: true,
             //обязательно для корректной работы через вебшторм - ?
             useUnifiedTopology: true,
             useFindAndModify: false
         })
-        //логика перенесена в route/auth.js
-        // const candidate = await User.findOne()
-        // if (!candidate) {
-        //     const user = new User({
-        //         email: 'lazeratrax@gmail.com',
-        //         name: 'Kirill',
-        //         cart: {items: []}
-        //     })
-        //     await user.save()
-        // }
-
         app.listen(port, () => {
             console.log('сервер грузится на localhost:' + port)
         })
