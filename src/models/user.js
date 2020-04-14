@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatarUrl: String,
     //поля required не ставится, потому что это токены-) принадлежат пользователю но и тотально - опшен
     resetToken: String,
     //expiration - "истечение"
