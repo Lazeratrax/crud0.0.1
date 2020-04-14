@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const Course = require('../models/course');
 // const Card = require('../models/card');
+const auth = require('../middleware/auth')
 const router = Router()
 
 //функция-хэлпер для формирования массива курсов
@@ -22,15 +23,16 @@ function computePrice(courses) {
     }, 0)
 }
 
-router.post('/add', async (req, res) => {
+router.post('/add', auth, async (req, res) => {
     console.log(req.body.id)
     const course = await Course.findById(req.body.id)
+    console.log(req.user)
     await req.user.addToCart(course)
     // await Card.add(course)
     res.redirect('/card')
 })
 
-router.delete('/remove/:id', async (req, res) => {
+router.delete('/remove/:id', auth, async (req, res) => {
     await req.user.removeFromCart(req.params.id)
     const user = await req.user.populate(`cart.items.courseId`).execPopulate()
     const courses = mapCartItems(user.cart)
@@ -41,7 +43,7 @@ router.delete('/remove/:id', async (req, res) => {
     // const card = await Card.remove(req.params.id)
 })
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     //корзину получаем из модели пользователя
     const user = await req.user
         //оставляем только содержимое, чтобы вместо courseId попало содержимое

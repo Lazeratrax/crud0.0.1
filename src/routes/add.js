@@ -1,15 +1,35 @@
 const {Router} = require('express');
+const {validationResult} = require('express-validator')
 const Course = require('../models/course')
+const auth = require('../middleware/auth')
+const {courseValidators} = require('../utils/validators')
 const router = Router()
 
-router.get('/', (req, res) => {
+router.get('/', auth, (req, res) => {
     res.render('add', {
         title: "добавить курс",
         isAdd: true
     })
 })
 
-router.post('/', async (req, res) => {
+//миддлвар - утилита валидации
+router.post('/', auth, courseValidators, async (req, res) => {
+    const errors = validationResult(req)
+    //если есть ошибки
+    if (!errors.isEmpty()) {
+        //422 - ошибка валидации
+        return res.status(422).render('add', {
+            title: 'Добавить курс',
+            isAdd: true,
+            error: errors.array()[0].msg,
+            data: {
+                title: req.body.title,
+                price: req.body.price,
+                img: req.body.img
+            }
+        })
+    }
+
     const course = new Course({
         //передаем объект конфигурации
         title: req.body.title,
@@ -19,14 +39,13 @@ router.post('/', async (req, res) => {
         // userId: req.user._id
         userId: req.user
     })
+    try {
 
-     try {
         await course.save()
         res.redirect('/courses')
     } catch (e) {
         console.log(e)
     }
-    res.redirect('/courses')
 })
 
 module.exports = router;

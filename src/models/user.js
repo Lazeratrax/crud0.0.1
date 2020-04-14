@@ -6,10 +6,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    name: {
+    name: String,
+    password: {
         type: String,
         required: true
     },
+    //поля required не ставится, потому что это токены-) принадлежат пользователю но и тотально - опшен
+    resetToken: String,
+    //expiration - "истечение"
+    resetTokenExp: Date,
     cart: {
         items: [
             {

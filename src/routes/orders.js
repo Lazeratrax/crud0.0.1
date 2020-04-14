@@ -1,9 +1,10 @@
 const {Router} = require('express')
 const Order = require('../models/order')
 //новый роутер - результат работы функции Роутер:
+const auth = require('../middleware/auth')
 const router = Router()
 
-router.get(`/`, async (req, res) => {
+router.get(`/`, auth, async (req, res) => {
     try {
         const orders = await Order.find({
             //сравниваем модель с текущим id
@@ -18,7 +19,6 @@ router.get(`/`, async (req, res) => {
                     price: o.courses.reduce((total, c) => {
                         return total += c.count * c.course.price
                     }, 0)
-
                 }
             })
         })
@@ -29,7 +29,7 @@ router.get(`/`, async (req, res) => {
 
 })
 //делаем заказ - получаем редирект
-router.post(`/`, async (req, res) => {
+router.post(`/`, auth, async (req, res) => {
     try {
         const user = await req.user
             //превращаем те id курсов в объекты
@@ -58,9 +58,8 @@ router.post(`/`, async (req, res) => {
     } catch (e) {
         console.log(e)
     }
-
-
 })
+
 
 module.exports = router
 

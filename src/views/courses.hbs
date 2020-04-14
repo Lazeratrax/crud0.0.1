@@ -1,25 +1,37 @@
 <h1>Курсы</h1>
 
 {{#if courses.length}}
+    {{!цикл each для объектов массива courses}}
     {{#each courses}}
         <div class="row">
             <div class="col s6 offset-s3">
                 <div class="card">
                     <div class="card-image">
                         <img src="{{img}}" alt="{{title}}">
-
                     </div>
+
                     <div class="card-content">
                         <span class="card-title">{{title}}</span>
                         <p class="price">{{price}}</p>
                     </div>
+                    {{! дебаг проверка равенства  - создатель курса и авторизованный пользоваетль/ userId - относится к courses,
+                     такой синтксис - userId._id - из-за mongoose/  @root.userId - выходим из модели курсов и обращаемся к авторизованному
+                    <pre>{userId._id} {@root.userId}</pre> }}
+
                     <div class="card-action actions">
                         <a href="/courses/{{id}}" target="_blank">Открыть курс</a>
-                        <a href="/courses/{{id}}/edit?allow=true" target="_blank">Редактировать</a>
-                        <form action="/card/add" method="POST">
-                            <input type="hidden" name="id" value="{{id}}">
-                            <button type="submit" class="btn btn-primary">Купить</button>
-                        </form>
+                        {{#if @root.isAuth}}
+                            {{! хэлпер редактирование курса доступно, если пользоваетль тот, который его создал}}
+                            {{#ifeq userId._id @root.userId}}
+                                <a href="/courses/{{id}}/edit?allow=true" target="_blank">Редактировать</a>
+                            {{/ifeq}}
+
+                            <form action="/card/add" method="POST">
+                                <input type="hidden" name="_csrf" value="{{@root.csrf}}">
+                                <input type="hidden" name="id" value="{{id}}">
+                                <button type="submit" class="btn btn-primary">Купить</button>
+                            </form>
+                        {{/if}}
                     </div>
                 </div>
             </div>
