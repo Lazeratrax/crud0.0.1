@@ -28,7 +28,6 @@ router.post('/', auth, async (req, res) => {
             toChange.avatarUrl = req.file.path
         }
 
-
         //чтобы добавить новыe поля/ assign = 'назначить'/ добавить user поля toChange
         Object.assign(user, toChange)
         await user.save()

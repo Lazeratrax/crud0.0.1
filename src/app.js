@@ -6,6 +6,10 @@ const csrf = require('csurf');
 //миддлвар. с помощью сессии позволяет делать транспортировку определенных ошибок
 const flash = require('connect-flash')
 const mongoose = require('mongoose');
+//защита express установкой заголовков
+const helmet = require('helmet')
+//сжатие js(для деплоя)
+const compression = require('compression')
 //мидлвар. пакет, отвечающий за сессии
 const session = require('express-session')
 // пакет, для сохр в автомат-режиме сессий в БД монгоДБ. с большой буквы - потому что название класса.
@@ -72,10 +76,16 @@ app.use(session({
 //загрузка файлов. single - передаем только 1 файл. avatar - название поля, куда складывается
 app.use(fileMiddleware.single('avatar'))
 //подключаем пакетные миддлвары. ВАЖНО! после сессии
+//Логика создания и верификации токенов CSRF
 app.use(csrf())
+//с помощью сессии позволяет делать транспортировку определенных ошибок
 app.use(flash())
-
+//защита express заголовками
+app.use(helmet())
+//сжатие js для деплоя
+app.use(compression())
 //опрделяем свои мидлвары, ВАЖНО! после сессии
+
 app.use(varMiddleware);
 app.use(userMiddleware);
 
