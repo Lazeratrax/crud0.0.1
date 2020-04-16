@@ -89,21 +89,6 @@ app.use(compression())
 app.use(varMiddleware);
 app.use(userMiddleware);
 
-//иницилизация юзера - логика переносится в route/auth.js
-// app.use(async (req, res, next) => {
-//     try {
-//         const user = await User.findById(`5e8b0d920bd69f3cb44a95ad`)
-//         // const user = await User.findOne()
-//         console.log(user)
-//         req.user = user
-//         next()
-//     } catch (e) {
-//         console.log(e)
-//     }
-// })
-
-// app.use(express.static(path.join(__dirname, 'src/public')));
-
 //подключение роутов
 app.use('/', homeRoutes);
 app.use('/courses', courseRoutes);
@@ -115,16 +100,6 @@ app.use('/profile', profileRoutes)
 
 //для любых несуществующих роутов - страница 404. подключать строго после всех роутов!
 app.use(errorHandler)
-//
-// app.get('/', (req, res) => {
-//     // res.sendFile(path.join(__dirname, 'views', 'index.hbs'))
-//     res.render('index')
-// });
-//
-// app.get('/about', (req, res) => {
-//     // res.sendFile(path.join(__dirname, 'views', 'about.hbs'))
-//     res.render('about')
-// });
 
 const port = process.env.PORT || 3001
 
@@ -143,7 +118,7 @@ async function start() {
         console.log(e)
     }
 }
-
+//запуск
 start()
 
 
